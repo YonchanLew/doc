@@ -1,0 +1,5 @@
+https://blog.csdn.net/gutidong/article/details/78815429
+设置了sql server browser 自动（原本禁用）
+设置了shared Memory 启用（原本禁用）
+设置了Named Pipes 启用（原本禁用）
+设置了TCP/IP 启用（原本禁用）

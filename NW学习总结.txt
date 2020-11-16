@@ -1,0 +1,236 @@
+NW解压缩后：
+locales文件夹是区域语言设置
+d3dcompiler_47.dll是软件和游戏运行的重要动态链接库
+ffmpegsumo.dll是谷歌浏览器核心引擎升级后用来支持视频和音频播放的动态链接库
+icudtl.dat是一个存储基本数据信息的文件
+libEGL.dll是实现webGL必须用到的动态链接库
+libGLESv2.dll是实现GPU必须用到的动态链接库
+nw.exe主要应用
+nw.pak顾名思义，核心数据的压缩包
+nwjc.exe用于打包时项目加密使用
+pdf.dll打开pdf格式文件的动态链接库
+
+简单应用：
+index.html和package.json
+{  
+  "name": "nw-demo",  
+  "version": "0.0.1",  
+  "main": "index.html"  
+} 
+直接把文件夹拖拉到NW中就行
+
+package常用配置：
+{  
+    /**指定程序的起始页面。*/  
+    "main": "index.html",  //必须
+    /**字符串必须是小写字母或者数字，可以包含.或者_或者-不允许带空格。name必须全局唯一。*/  
+    "name": "demo",  //必须
+    /**程序描述*/  
+    "description": "demo app of node-webkit",  
+    /**程序版本号*/  
+    "version": "0.1.0",  
+    /**关键字*/  
+    "keywords": ["demo","node-webkit"],  
+    /**bool值，如果设置为false，将禁用webkit的node支持。*/  
+    "nodejs": true,  
+    /**  
+    * 指定一个node.js文件，当程序启动时，该文件会被运行，启动时间要早于node-webkit加载html的时间。  
+    * 它在node上下文中运行，可以用它来实现类似后台线程的功能。  
+    * （不需要可注释不用）  
+    */  
+    //"node-main": "js/node.js",  
+    /**  
+    * bool值。默认情况下，如果将node-webkit程序打包发布，那么只能启动一个该应用的实例。  
+    * 如果你希望允许同时启动多个实例，将该值设置为false。  
+    */  
+    "single-instance": true,  
+    /**窗口属性设置 */  
+    "window": {  
+        /**字符串，设置默认title。*/  
+        "title": "demo",  
+        /**窗口的icon。*/  
+        "icon": "link.png",  
+        /**bool值。是否显示导航栏。*/  
+        "toolbar": false,  
+        /**bool值。是否允许调整窗口大小。*/  
+        "resizable": true,  
+        /**是否全屏*/  
+        "fullscreen": false,  
+        /**是否在win任务栏显示图标*/  
+        "show_in_taskbar": true,  
+        /**bool值。如果设置为false，程序将无边框显示。*/  
+        "frame": true,  
+        /**字符串。窗口打开时的位置，可以设置为“null”、“center”或者“mouse”。*/  
+        "position": "center",  
+        /**主窗口的的宽度。*/  
+        "width": 800,  
+        /**主窗口的的高度。*/  
+        "height": 670,  
+        /**窗口的最小宽度。*/  
+        "min_width": 400,  
+        /**窗口的最小高度。*/  
+        "min_height": 335,  
+        /**窗口显示的最大宽度，可不设。*/  
+        "max_width": 800,  
+        /**窗口显示的最大高度，可不设。*/  
+        "max_height": 670,  
+        /**bool值，如果设置为false，启动时窗口不可见。*/  
+        "show": true,  
+        /**是否在任务栏显示图标。*/  
+        "show_in_taskbar":true,  
+        /**  
+         * bool值。是否使用kiosk模式。如果使用kiosk模式，  
+         * 应用程序将全屏显示，并且阻止用户离开应用。  
+         * */  
+        "kiosk": false  
+    },  
+    /**webkit设置*/  
+    "webkit": {  
+        /**bool值，是否加载插件，如flash，默认值为false。*/  
+        "plugin": true,  
+        /**bool值，是否加载Java applets，默认为false。*/  
+        "java": false,  
+        /**bool值，是否启用页面缓存，默认为false。*/  
+        "page-cache": false  
+    }  
+}  
+
+var gui = require('nw.gui'); //加载模块
+var menu = new gui.Menu({ title: 'Menu Title' });  //创建对象
+menu.title = 'New Title';  //.方式访问属性
+menu.append(new gui.MenuItem({ label: 'Im an item' }));  
+menu.removeAt(0);  //可remove, append 和 insert
+for (var i = 0; i < menu.items.length; ++i) {  //子元素通常存储在items字段中
+  console.log('MenuItem', i, menu.items[i]);  
+}  
+menu.items[2].title = 'New Title'  //更新一个元素
+tray.remove();  
+tray = null;  //移除一个元素后，请给该元素赋以null值
+menuitem.on('click', function() {  //事件监听方法
+  console.log('Item is clicked');  
+});  
+
+gui.Window.open('http://google.com',{toolbar:false,frame:false}); //新建无边框窗口
+使用无边框窗口要有关闭窗口的动作window.close()。
+
+尽量不要使用body拖动，除非设置按钮不可拖动，否则点击不了。
+
+-webkit-app-region: drag;  //可拖动
+-webkit-app-region: no-drag;  //不可拖动
+-webkit-user-select: none;  //文本框不可选
+
+作为窗口菜单创建
+new Menu({  
+  type: 'menubar'  
+});  
+
+new gui.MenuItem({ type: 'separator' });  //分割线也是作为一个菜单项
+submenu必须是一个Menu类型的对象
+
+<script>
+  var gui = require('nw.gui');
+  var clipboard = gui.Clipboard.get();
+  var text = clipboard.get('text'); //.get('text')是获取文本类型的剪贴板
+  console.log(text);
+  clipboard.set('i love node-webkit :)', 'text');
+  text = clipboard.get('text');
+  console.log(text);
+  clipboard.clear();
+  text = clipboard.get('text');
+  console.log(text);
+</script>
+
+<input type="file" nwsaveas="filename.txt" />  //打开一个另存为的窗口和默认文件名称
+
+<script>  
+  function chooseFile(name) {  
+    var chooser = $(name);  
+    chooser.change(function(evt) {  
+      console.log($(this).val());  
+      // Reset the selected value to empty ('')  
+      $(this).val('');    //重置，才能检测change事件
+    });  
+  
+    chooser.trigger('click');    
+  }  
+  chooseFile('#fileDialog');  
+</script>  
+
+你需要在package配置文件中设置窗口的显示为false，这样在node-webkit启动时便不会显示窗口。
+"window": {  
+  "show": false  
+}   
+当所有都准备就绪后，你再调用Windows API把窗口显示出来。
+onload = function() {  
+  gui.Window.get().show();  
+}  
+
+"main": "app://AppName/index.html"  //隐藏目录，就是说目录带特殊符号的时候使用，"app://"必须
+
+编译js为bin，防止代码暴露，nwjc source.js binary.bin ，使用require('nw.gui').Window.get().evalNWBin(null, '目录/binary.bin'); 然后直接执行里面的函数。速度慢不建议使用 ，不同平台也不通用。
+
+打包就是把项目压缩为zip再改后缀为.nw，把.nw文件放到nw目录，再打包成可执行文件，打包过程有很多种打包方法
+
+Shell就是一些操作，例如用默认浏览器打开链接，打开文件管理器，打开文件
+
+Shortcut没有焦点也能触发
+
+// gulp热更新
+<script>  
+   var gulp = require('gulp');  
+   gulp.task('reload', function () {  //reload是任务名
+     if (location) location.reload();  
+   });  
+  
+   gulp.watch('**/*', ['reload']);  // **/*代表所有文件，这样速度会很慢，应该针对需要更新的文件或文件夹，['reload']执行的任务
+</script> 
+
+holder.ondrop = function (e) {  //读取文件信息
+  e.preventDefault();  
+  
+  var file = e.dataTransfer.files[0],  
+      reader = new FileReader();  
+  reader.onload = function (event) {  
+    console.log(event.target);  
+  };  
+  console.log(file);  
+  reader.readAsDataURL(file);  
+  
+  return false;  
+}; 
+使用JQuery方法绑定时，获取dataTransfer对象要使用e.originalEvent.dataTransfer语句。original代表原生。
+
+1.event.preventDefault()
+2.event.stopPropagation()
+3.return false
+event.preventDefault() 阻止特定事件的默认行为（只有 cancelable 设置为 true 的事件才可以使用），比如：点击 type="submit" 的 input 标签提交表单，你在 onclick 事件处理中调用 event.preventDefault()方法， 那么在点击 submit 后就不会自动提交表单了。但是并不阻止事件冒泡。
+event.stopPropagation() 立即停止事件在 DOM 层次中的传播，即阻止事件冒泡。但是，并不阻止默认行为。
+return false 之后的所有相关的触发事件和动作都不会被执行。阻止事件继续传播，事件冒泡和默认行为都被阻止。
+
+var db = openDatabase('mydb', '1.0', 'my first database', 2 * 1024 * 1024);  //数据库名称、版本号、数据库描述和数据库预估大小
+
+db.transaction(function (tx) {  
+  tx.executeSql('CREATE TABLE IF NOT EXISTS foo (id unique, text)');  //建表
+  tx.executeSql('INSERT INTO foo (id, text) VALUES (1, "synergies")');  //插入
+  tx.executeSql('INSERT INTO foo (id, text) VALUES (2, "luyao")');  
+});  
+db.transaction(function (tx) {  
+  tx.executeSql('SELECT * FROM foo', [], function (tx, results) {   //读取
+    var len = results.rows.length, i;  
+    for (i = 0; i < len; i++) {  
+      alert(results.rows.item(i).text);  
+    }  
+  });  
+});  
+
+使用child_process模块模块不外乎几种情况：1.调用系统命令行 2.打开第三方软件 3.打开第三方软件并实现通信。
+var nwexec = cp.spawn('cmd.exe', ['/s','/c','tasklist']);  // cmd.exe /s /c tasklist
+
+spawn在执行时会返回一个stdout和stderr流对象，为边执行边返回。exec是在执行完成后返回一个完整的buffer，这个buffer的大小应该是200k。如果子进程返回的数据大小超过了200k，程序将会崩溃，同时显示错误信息"Error：maxBuffer exceeded"。
+spawn在执行完成后会抛出close事件监听，并返回状态码，通过状态码可以知道子进程是否顺利执行。exec只能通过返回的buffer去识别完成状态，识别起来较为麻烦。
+能使用spawn实现子进程的尽量使用spawn，其一可以避免不必要的异常错误，其次在调用上较为规范。如果需要通过child_process模块反复调用某个第三方软件或程序，注意一点就是避免重复打开（如子进程进入死循环，或者子进程没结束就又重复打开），过多的子进程会消耗系统的资源，严重时可能会造成卡顿，死机等情况。如果遇到这种情况，可以通过.kill();方法停止线程运行。如上述使用spawn的例子中均有一个result = cp.spawn...，停止线程方法为：
+
+fs.exists(fileName, function(exists) {})    //不会新建文件，只有写入数据时，文件不存在就会新建
+
+fs.mkdir(dirName, function(err) {})    //文件夹不存在会新建一个
+fs.writeFile(fileName, content, function(errr) {})

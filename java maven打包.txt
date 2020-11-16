@@ -1,0 +1,1 @@
+maven打包为war包，点击idea右边的maven，plugins，war，war:war右键run Maven build
